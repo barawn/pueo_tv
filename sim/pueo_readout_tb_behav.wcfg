@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="pueo_readout_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="pueo_readout_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="2106650fs"></ZoomStartTime>
+      <ZoomEndTime time="2140471fs"></ZoomEndTime>
+      <Cursor1Time time="2127290fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="316"></NameColumnWidth>
+      <ValueColumnWidth column_width="263"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="28" />
+   <wave_markers>
+      <marker time="2133266" label="" />
+   </wave_markers>
+   <wvobject fp_name="/pueo_readout_tb/sclk" type="logic">
+      <obj_property name="ElementShortName">sclk</obj_property>
+      <obj_property name="ObjectShortName">sclk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/aclk_counter" type="array">
+      <obj_property name="ElementShortName">aclk_counter[1:0]</obj_property>
+      <obj_property name="ObjectShortName">aclk_counter[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/aclk" type="logic">
+      <obj_property name="ElementShortName">aclk</obj_property>
+      <obj_property name="ObjectShortName">aclk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/memclk_counter" type="array">
+      <obj_property name="ElementShortName">memclk_counter[1:0]</obj_property>
+      <obj_property name="ObjectShortName">memclk_counter[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/memclk" type="logic">
+      <obj_property name="ElementShortName">memclk</obj_property>
+      <obj_property name="ObjectShortName">memclk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/syncclk_counter" type="array">
+      <obj_property name="ElementShortName">syncclk_counter[3:0]</obj_property>
+      <obj_property name="ObjectShortName">syncclk_counter[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/syncclk" type="logic">
+      <obj_property name="ElementShortName">syncclk</obj_property>
+      <obj_property name="ObjectShortName">syncclk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/aclk_sync" type="logic">
+      <obj_property name="ElementShortName">aclk_sync</obj_property>
+      <obj_property name="ObjectShortName">aclk_sync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/memclk_sync" type="logic">
+      <obj_property name="ElementShortName">memclk_sync</obj_property>
+      <obj_property name="ObjectShortName">memclk_sync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/dat" type="array">
+      <obj_property name="ElementShortName">dat[15:0]</obj_property>
+      <obj_property name="ObjectShortName">dat[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/dat_store" type="array">
+      <obj_property name="ElementShortName">dat_store[111:0]</obj_property>
+      <obj_property name="ObjectShortName">dat_store[111:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/dat_aclk" type="array">
+      <obj_property name="ElementShortName">dat_aclk[127:0]</obj_property>
+      <obj_property name="ObjectShortName">dat_aclk[127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/u_uram/buffer_phase" type="array">
+      <obj_property name="ElementShortName">buffer_phase[2:0]</obj_property>
+      <obj_property name="ObjectShortName">buffer_phase[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/u_uram/write_phase" type="array">
+      <obj_property name="ElementShortName">write_phase[1:0]</obj_property>
+      <obj_property name="ObjectShortName">write_phase[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/u_uram/buffer_data" type="array">
+      <obj_property name="ElementShortName">buffer_data[287:0]</obj_property>
+      <obj_property name="ObjectShortName">buffer_data[287:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/u_uram/write_data" type="array">
+      <obj_property name="ElementShortName">write_data[71:0]</obj_property>
+      <obj_property name="ObjectShortName">write_data[71:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/aclk_rst" type="logic">
+      <obj_property name="ElementShortName">aclk_rst</obj_property>
+      <obj_property name="ObjectShortName">aclk_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/u_uram/aclk_reset_seen" type="logic">
+      <obj_property name="ElementShortName">aclk_reset_seen</obj_property>
+      <obj_property name="ObjectShortName">aclk_reset_seen</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/u_uram/aclk_reset" type="logic">
+      <obj_property name="ElementShortName">aclk_reset</obj_property>
+      <obj_property name="ObjectShortName">aclk_reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/u_uram/write_reset" type="logic">
+      <obj_property name="ElementShortName">write_reset</obj_property>
+      <obj_property name="ObjectShortName">write_reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/u_uram/write_run" type="logic">
+      <obj_property name="ElementShortName">write_run</obj_property>
+      <obj_property name="ObjectShortName">write_run</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/u_uram/write_write" type="logic">
+      <obj_property name="ElementShortName">write_write</obj_property>
+      <obj_property name="ObjectShortName">write_write</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/addr_request" type="array">
+      <obj_property name="ElementShortName">addr_request[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_request[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/addr_request_valid" type="logic">
+      <obj_property name="ElementShortName">addr_request_valid</obj_property>
+      <obj_property name="ObjectShortName">addr_request_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/addr_request_ready" type="logic">
+      <obj_property name="ElementShortName">addr_request_ready</obj_property>
+      <obj_property name="ObjectShortName">addr_request_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/data_out" type="array">
+      <obj_property name="ElementShortName">data_out[71:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[71:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/data_out_valid" type="logic">
+      <obj_property name="ElementShortName">data_out_valid</obj_property>
+      <obj_property name="ObjectShortName">data_out_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/pueo_readout_tb/u_uram/u_buffer/enb" type="logic">
+      <obj_property name="ElementShortName">enb</obj_property>
+      <obj_property name="ObjectShortName">enb</obj_property>
+   </wvobject>
+</wave_config>
