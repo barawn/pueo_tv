@@ -1,0 +1,79 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"1.0",
+   "Default View_TopLeft":"-610,-576",
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 7.0.21  2019-05-29 bk=1.5064 VDI=41 GEI=36 GUI=JA:9.0 non-TLS
+#  -string -flagsOSRD
+preplace port adcA_in -pg 1 -lvl 0 -x 0 -y -160 -defaultsOSRD
+preplace port ma_axis -pg 1 -lvl 4 -x 1620 -y -190 -defaultsOSRD
+preplace port sysref_in -pg 1 -lvl 0 -x 0 -y -260 -defaultsOSRD
+preplace port adc0_clk -pg 1 -lvl 0 -x 0 -y -240 -defaultsOSRD
+preplace port mb_axis -pg 1 -lvl 4 -x 1620 -y -130 -defaultsOSRD
+preplace port mc_axis -pg 1 -lvl 4 -x 1620 -y -110 -defaultsOSRD
+preplace port md_axis -pg 1 -lvl 4 -x 1620 -y -90 -defaultsOSRD
+preplace port me_axis -pg 1 -lvl 4 -x 1620 -y -70 -defaultsOSRD
+preplace port mf_axis -pg 1 -lvl 4 -x 1620 -y -50 -defaultsOSRD
+preplace port mg_axis -pg 1 -lvl 4 -x 1620 -y -30 -defaultsOSRD
+preplace port mh_axis -pg 1 -lvl 4 -x 1620 -y -10 -defaultsOSRD
+preplace port adc1_clk -pg 1 -lvl 0 -x 0 -y -220 -defaultsOSRD
+preplace port adc2_clk -pg 1 -lvl 0 -x 0 -y -200 -defaultsOSRD
+preplace port adc3_clk -pg 1 -lvl 0 -x 0 -y -180 -defaultsOSRD
+preplace port adcB_in -pg 1 -lvl 0 -x 0 -y -140 -defaultsOSRD
+preplace port adcC_in -pg 1 -lvl 0 -x 0 -y -120 -defaultsOSRD
+preplace port adcD_in -pg 1 -lvl 0 -x 0 -y -100 -defaultsOSRD
+preplace port adcE_in -pg 1 -lvl 0 -x 0 -y -80 -defaultsOSRD
+preplace port adcF_in -pg 1 -lvl 0 -x 0 -y -60 -defaultsOSRD
+preplace port adcG_in -pg 1 -lvl 0 -x 0 -y -40 -defaultsOSRD
+preplace port adcH_in -pg 1 -lvl 0 -x 0 -y -20 -defaultsOSRD
+preplace port m_axi -pg 1 -lvl 4 -x 1620 -y -440 -defaultsOSRD
+preplace port ma_aclk -pg 1 -lvl 4 -x 1620 -y -150 -defaultsOSRD
+preplace port m_axi_aclk -pg 1 -lvl 4 -x 1620 -y -310 -defaultsOSRD
+preplace port mem_clk -pg 1 -lvl 4 -x 1620 -y 50 -defaultsOSRD
+preplace port sync_clk -pg 1 -lvl 4 -x 1620 -y 70 -defaultsOSRD
+preplace portBus m_axi_aresetn -pg 1 -lvl 4 -x 1620 -y -600 -defaultsOSRD
+preplace inst zynq_ultra_ps_e_0 -pg 1 -lvl 1 -x 460 -y -320 -defaultsOSRD
+preplace inst usp_rf_data_converter_0 -pg 1 -lvl 2 -x 1000 -y -30 -defaultsOSRD
+preplace inst ps8_0_axi_periph -pg 1 -lvl 3 -x 1380 -y -450 -defaultsOSRD
+preplace inst rst_ps8_0_99M -pg 1 -lvl 2 -x 1000 -y -400 -defaultsOSRD
+preplace inst adc0_clk_wiz -pg 1 -lvl 3 -x 1380 -y 40 -defaultsOSRD
+preplace netloc zynq_ultra_ps_e_0_pl_clk0 1 0 4 40 -190 780 -510 1190 -610 1570
+preplace netloc zynq_ultra_ps_e_0_pl_resetn0 1 1 1 770 -420n
+preplace netloc rst_ps8_0_99M_peripheral_aresetn 1 1 3 830 -500 1170 -600 N
+preplace netloc adc0_clk_wiz_clk_out1 1 1 3 800 -630 NJ -630 1550
+preplace netloc usp_rf_data_converter_0_clk_adc0 1 2 1 1180J 10n
+preplace netloc adc0_clk_wiz_locked 1 1 3 810 -620 NJ -620 1540
+preplace netloc adc0_clk_wiz_clk_out2 1 3 1 N 50
+preplace netloc adc0_clk_wiz_clk_out3 1 3 1 N 70
+preplace netloc usp_rf_data_converter_0_m02_axis 1 2 2 NJ -130 NJ
+preplace netloc usp_rf_data_converter_0_m00_axis 1 2 2 1180J -190 NJ
+preplace netloc vin0_01_0_1 1 0 2 NJ -160 NJ
+preplace netloc sysref_in_1 1 0 2 30J -210 760J
+preplace netloc ps8_0_axi_periph_M00_AXI 1 1 3 820 -590 NJ -590 1530
+preplace netloc zynq_ultra_ps_e_0_M_AXI_HPM0_LPD 1 1 2 760J -520 1180
+preplace netloc adc0_clk_1 1 0 2 20J -230 790J
+preplace netloc usp_rf_data_converter_0_m12_axis 1 2 2 NJ -90 NJ
+preplace netloc usp_rf_data_converter_0_m22_axis 1 2 2 NJ -50 NJ
+preplace netloc adc1_clk_0_1 1 0 2 NJ -220 NJ
+preplace netloc usp_rf_data_converter_0_m30_axis 1 2 2 1190J 130 1560J
+preplace netloc usp_rf_data_converter_0_m32_axis 1 2 2 1170J 140 1570J
+preplace netloc adc2_clk_0_1 1 0 2 NJ -200 NJ
+preplace netloc vin3_01_0_1 1 0 2 NJ -40 NJ
+preplace netloc vin2_01_0_1 1 0 2 NJ -80 NJ
+preplace netloc vin1_01_0_1 1 0 2 NJ -120 NJ
+preplace netloc vin0_23_0_1 1 0 2 NJ -140 NJ
+preplace netloc vin1_23_0_1 1 0 2 NJ -100 NJ
+preplace netloc adc3_clk_0_1 1 0 2 NJ -180 NJ
+preplace netloc vin2_23_0_1 1 0 2 NJ -60 NJ
+preplace netloc vin3_23_0_1 1 0 2 NJ -20 NJ
+preplace netloc usp_rf_data_converter_0_m20_axis 1 2 2 NJ -70 NJ
+preplace netloc usp_rf_data_converter_0_m10_axis 1 2 2 NJ -110 NJ
+preplace netloc ps8_0_axi_periph_M01_AXI 1 3 1 N -440
+levelinfo -pg 1 0 460 1000 1380 1620
+pagesize -pg 1 -db -bbox -sgen -110 -930 1800 260
+"
+}
+{
+   "da_axi4_cnt":"1",
+   "da_rf_converter_usp_cnt":"1"
+}
