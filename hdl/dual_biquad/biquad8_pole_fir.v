@@ -81,16 +81,27 @@ module biquad8_pole_fir #(parameter NBITS=16,
     reg coeff_wr_f = 0;
     reg coeff_wr_g = 0;
     reg [NBITS-1:0] fin_store = {NBITS{1'b0}};
+    reg [NBITS-1:0] fin_store_tmp = {NBITS{1'b0}};
     reg [NBITS-1:0] gin_store = {NBITS{1'b0}};
     always @(posedge clk) begin
         coeff_wr_f <= coeff_wr_i && !coeff_adr_i[4];
         coeff_wr_g <= coeff_wr_i && coeff_adr_i[4];
         
-        fin_store <= dat_i[NBITS*0 +: NBITS];
-        gin_store <= dat_i[NBITS*0 +: NBITS];
+        // The F-chain (used for computing sample 0) takes sample 0. However,
+        // it's *shorter* than the G-chain, and so we need to delay it more to
+        // get things to line up. Note that this means that all of the SRLs
+        // for the F-chain need an extra delay.
+        fin_store_tmp <= dat_i[NBITS*0 +: NBITS];
+        fin_store <= fin_store_tmp;
+        // The G-chain (used for computing sample 1) takes sample 1
+        gin_store <= dat_i[NBITS*1 +: NBITS];
     end
 
-    `define COMMON_ATTRS `CONSTANT_MODE_ATTRS,`DE2_UNUSED_ATTRS,.AREG(0),.ACASCREG(0),.ADREG(0),.BREG(2),.BCASCREG(1),.MREG(0),.PREG(1)
+    // AREG is *almost* common. The next-to-last DSP in the chain
+    // feeds back, and so obviously it needs a delay. But because
+    // ACASCREG (pointlessly) needs to be AREG, we create a new
+    // parameter for it.
+    `define COMMON_ATTRS `CONSTANT_MODE_ATTRS,`DE2_UNUSED_ATTRS,.AREG(THIS_AREG),.ACASCREG(THIS_AREG),.ADREG(0),.BREG(2),.BCASCREG(1),.MREG(0),.PREG(1)
 
     generate
         genvar fi,fj, gi,gj;
@@ -109,9 +120,9 @@ module biquad8_pole_fir #(parameter NBITS=16,
                 always @(posedge clk) begin : STORE
                     dat_store <= dat_out;
                 end
-                wire [29:0] dspA_in;
-                srlvec #(.NBITS(NBITS)) u_delay(.clk(clk),.ce(ce),.a(fi+1),
-                                                .din(dat_i[NBITS*(7-i) +: NBITS]),
+                // Here's that extra delay for the F-chain data inputs.
+                srlvec #(.NBITS(NBITS)) u_delay(.clk(clk),.ce(1'b1),.a(fi+2),
+                                                .din(dat_i[NBITS*(7-fi) +: NBITS]),
                                                 .dout(dat_out));
                 // we get inputs in Q14.2 format. (NBITS-NFRAC, NFRAC)
                 // Internally we compute in Q21.27 format, coefficients in Q4.14 format
@@ -120,9 +131,12 @@ module biquad8_pole_fir #(parameter NBITS=16,
                 localparam NUM_TAIL_PAD = 13 - NFRAC;
                 assign dspA_in = { {NUM_HEAD_PAD{dat_store[NBITS-1]}}, dat_store, {NUM_TAIL_PAD{1'b0}} };            
             end else begin : LOOPBACK
+                // The output is Q21.27, and we want
+                // Q17.13.
                 assign dspA_in = fpout[fi-1][14 +: 30];
             end
             if (fi == 0) begin : HEAD
+                localparam THIS_AREG = 0;
                 localparam C_HEAD_PAD = 21 - (NBITS-NFRAC);
                 localparam C_TAIL_PAD = 27 - NFRAC;
                 wire [47:0] dspC_in = { {C_HEAD_PAD{fin_store[NBITS-1]}}, fin_store, {C_TAIL_PAD{1'b0}} };
@@ -145,14 +159,17 @@ module biquad8_pole_fir #(parameter NBITS=16,
                             .P(fpout[fi]),
                             .PCOUT(fpcascade[fi]));
             end else begin : BODY
+                localparam THIS_AREG = (fi < FLEN-1) ? 0 : 1;
                 DSP48E2 #(`COMMON_ATTRS,.B_INPUT("CASCADE"),`C_UNUSED_ATTRS)
                     u_body( .CLK(clk),
-                            .CEP(1'b1),
+                            .CEP(1'b1),                            
                             .A(dspA_in),
+                            .CEA2(THIS_AREG),
                             .BCIN(fbcascade[fi-1]),
                             .BCOUT(fbcascade[fi]),
                             .CEB1(ceb1),
                             .CEB2(ceb2),
+                            `C_UNUSED_PORTS,
                             `D_UNUSED_PORTS,
                             .CARRYINSEL(`CARRYINSEL_CARRYIN),
                             .ALUMODE(`ALUMODE_SUM_ZXYCIN),
@@ -174,17 +191,17 @@ module biquad8_pole_fir #(parameter NBITS=16,
             if (gi < GLEN-1) begin : DIRECT
                 reg [NBITS-1:0] dat_store = {NBITS{1'b0}};
                 wire [NBITS-1:0] dat_out;
-                wire [29:0] dspA_in;
                 if (gi > 0) begin : SRL
-                    srlvec #(.NBITS(NBITS)) u_delay(.clk(clk),.ce(ce),.a(gi+1),
-                                                    .din(dat_i[NBITS*(8-i) +: NBITS]),
+                    srlvec #(.NBITS(NBITS)) u_delay(.clk(clk),.ce(1'b1),.a(gi+1),
+                                                    .din(dat_i[NBITS*(8-gi) +: NBITS]),
                                                     .dout(dat_out));
                     always @(posedge clk) begin : STORE
                         dat_store <= dat_out;
                     end                                    
                 end else begin : FF
+                    // We grab the *undelayed* input.
                     always @(posedge clk) begin : STORE
-                        dat_store <= dat_i[0 +: NBITS];
+                        dat_store <= fin_store_tmp[0 +: NBITS];
                     end
                 end
                 // we get inputs in Q14.2 format. (NBITS-NFRAC, NFRAC)
@@ -197,6 +214,7 @@ module biquad8_pole_fir #(parameter NBITS=16,
                 assign dspA_in = gpout[gi-1][14 +: 30];
             end
             if (gi == 0) begin : HEAD
+                localparam THIS_AREG = 0;
                 localparam C_HEAD_PAD = 21 - (NBITS-NFRAC);
                 localparam C_TAIL_PAD = 27 - NFRAC;
                 wire [47:0] dspC_in = { {C_HEAD_PAD{gin_store[NBITS-1]}}, gin_store, {C_TAIL_PAD{1'b0}} };
@@ -219,14 +237,17 @@ module biquad8_pole_fir #(parameter NBITS=16,
                             .P(gpout[gi]),
                             .PCOUT(gpcascade[gi]));
             end else begin : BODY
+                localparam THIS_AREG = (gi < GLEN-1) ? 0 : 1;
                 DSP48E2 #(`COMMON_ATTRS,.B_INPUT("CASCADE"),`C_UNUSED_ATTRS)
                     u_body( .CLK(clk),
                             .CEP(1'b1),
                             .A(dspA_in),
+                            .CEA2(THIS_AREG),
                             .BCIN(gbcascade[gi-1]),
                             .BCOUT(gbcascade[gi]),
                             .CEB1(ceb1),
                             .CEB2(ceb2),
+                            `C_UNUSED_PORTS,
                             `D_UNUSED_PORTS,
                             .CARRYINSEL(`CARRYINSEL_CARRYIN),
                             .ALUMODE(`ALUMODE_SUM_ZXYCIN),
@@ -265,7 +286,10 @@ module biquad8_pole_fir #(parameter NBITS=16,
     // A gets gpout[GLEN-2]
     localparam C_FRAC_BITS = 27;
     localparam A_FRAC_BITS = 13;
-    wire [29:0] dspF_A = { gpout[GLEN-2][A_FRAC_BITS +: 30] };
+    // Then to find where A starts, you just subtract the difference between
+    // the A and C frac bits (if they were the same, you start at the same one).
+    // Here we drop the bottom 14 bits.
+    wire [29:0] dspF_A = { gpout[GLEN-2][(C_FRAC_BITS-A_FRAC_BITS) +: 30] };
     wire [47:0] dspF_C = fpout[FLEN-1];
     DSP48E2 #(.AREG(2),.MREG(1),.BREG(2),.PREG(1),.CREG(1),`CONSTANT_MODE_ATTRS,`DE2_UNUSED_ATTRS)
         u_fdsp( .CLK(clk),
@@ -285,7 +309,7 @@ module biquad8_pole_fir #(parameter NBITS=16,
                 .INMODE(0),
                 .P(y0_out));
     // A gets fpout[GLEN-2]
-    wire [29:0] dspG_A = { fpout[FLEN-2][A_FRAC_BITS +: 30] };
+    wire [29:0] dspG_A = { fpout[FLEN-2][(C_FRAC_BITS-A_FRAC_BITS) +: 30] };
     wire [47:0] dspG_C = gpout[GLEN-1];
     DSP48E2 #(.AREG(2),.MREG(1),.BREG(2),.PREG(1),.CREG(1),`CONSTANT_MODE_ATTRS,`DE2_UNUSED_ATTRS)
         u_gdsp( .CLK(clk),
