@@ -151,16 +151,46 @@ module pueo_notch_tb;
     // 23 out22 z^-1 * P^8 U(8, cost) output at clock 9
     // 24 is the cross-link = f[n-1] * -1*P^9 U(7, cost)
 
-    // The IIR coeffs come from squaring the terms,  but
-    // I don't have the math written out. So bullshit it is.
-    localparam [17:0] iir0 = -0.5*16384;
-    localparam [17:0] iir1 = 0.25*16384;
-    localparam [17:0] iir2 = -0.5*16384;
-    localparam [17:0] iir3 = 0.25*16384;
- 
     // A Q=5 375 MHz notch has poles at mag 0.92416486, angle 0.78228186.
-    real mag = 0.92416486;
-    real ang = 0.78228186;
+    localparam real mag = 0.92416486;
+    localparam real ang = 0.78228186;
+
+    // calculate the IIR for the cross-terms (y0 looking at y1, and y1 looking at y0)
+    function real iir_cross;
+        input real mag;
+        input real ang;
+        input integer mypow;
+        real tmp;
+        begin
+            tmp = cheby2($cos(ang), 7);
+            iir_cross = 2*$pow(mag, mypow)*tmp;
+        end
+    endfunction
+
+    function real iir_direct;
+        input real mag;
+        input real ang;
+        input integer ord1;
+        input integer ord2;
+        real tmp1;
+        real tmp2;
+        begin
+            tmp1 = $pow(cheby2($cos(ang), ord1), 2);
+            tmp2 = $pow(cheby2($cos(ang), ord2), 2);
+            iir_direct = $pow(mag, 16)*(tmp1-tmp2);
+        end
+    endfunction
+
+    // The IIR coeffs are:
+    // 0: y0's y0 lookback = -P^16 (U^2(7,cost)-U^2(6,cost))
+    // 1:      y1 lookback = 2P^15 (U(7,cost)*cos(8t))
+    // 2: y1's y1 lookback = P^16(U^2(8,cost)-U^2(7,cost))
+    // 3:      y0 lookback = -2P^17(U(7,cost)*cos(8t))
+    localparam [17:0] iir0 = -16384*iir_direct(mag, ang, 7, 6);
+    localparam [17:0] iir1 = 16384*iir_cross(mag, ang, 15);
+    localparam [17:0] iir2 = 16384*iir_direct(mag, ang, 8, 7);
+    localparam [17:0] iir3 = -16384*iir_cross(mag, ang, 17);
+ 
  
     initial begin
         #100;
