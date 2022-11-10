@@ -31,7 +31,10 @@ module pueo_notch_tb;
     reg aclk = 1;
     always @(posedge sclk) if (aclk_counter == 2'b11) aclk <= ~aclk;
 
+    wire [2:0] smpno = { ~aclk, aclk_counter };
+
     reg [16*8-1:0] dat_aclk = {16*8{1'b0}};
+    wire [15:0] samples_out[7:0];
     
     reg [7:0] coeff_adr = {8{1'b0}};
     reg       coeff_wr = 0;
@@ -61,6 +64,7 @@ module pueo_notch_tb;
                            .y1_fir_in(y1_fir),
                            .y0_out(y0_iir),
                            .y1_out(y1_iir));
+    // the incrementals pick up 48 and 49 for now. probably fix this later.                           
     wire coeff_incr_wr = coeff_wr && (coeff_adr[7:5] == 1) && (coeff_adr[4:1] == 4'b1000);        
     wire [16*8-1:0] notch_data;
     biquad8_incremental u_incr(.clk(aclk),
@@ -72,6 +76,15 @@ module pueo_notch_tb;
                                .coeff_wr_i(coeff_incr_wr),
                                .coeff_update_i(coeff_update),
                                .dat_o(notch_data));
+    reg [15:0] wfm = {16{1'b0}};
+    always @(posedge sclk) wfm <= samples_out[smpno];
+    generate
+        genvar n;
+        for (n=0;n<8;n=n+1) begin : UNVEC
+            assign samples_out[n] = notch_data[16*n +: 16];
+        end
+    endgenerate
+
     task update_coeff;
         begin
             @(posedge aclk);
@@ -191,6 +204,9 @@ module pueo_notch_tb;
     localparam [17:0] iir2 = 16384*iir_direct(mag, ang, 8, 7);
     localparam [17:0] iir3 = -16384*iir_cross(mag, ang, 17);
  
+    
+    localparam [17:0] incr_0 = -16384*$pow(mag, 2);
+    localparam [17:0] incr_1 = 16384*2*mag*$cos(ang);
  
     initial begin
         #100;
@@ -222,12 +238,17 @@ module pueo_notch_tb;
         write_coeff(34, iir2);
         write_coeff(33, iir1);
         write_coeff(32, iir0);
+
+        write_coeff(49, incr_1);
+        write_coeff(48, incr_0);
         update_coeff();
         #100;
         @(posedge aclk);
         #1 dat_aclk[ 0 +: 16] <= 100;
+           dat_aclk[48 +: 16] <= 1;
         @(posedge aclk);
         #1 dat_aclk[ 0 +: 16] <= 0;
+           dat_aclk[48 +: 16] <= 0;
     end
         
 endmodule
